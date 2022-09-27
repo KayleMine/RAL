@@ -5,6 +5,7 @@
   <b>RAL - an launcher, good to bypass some warden scan's for example. <br>Just run's app from new user without any special rights e.g admin.</b><br>
 </p>
 <h1> Short how-2 </h1> 
+
 ### Login and pass mean for new local pc account that u make by "create" button.
 ### Just fill 2 rows with ur login and pass for fake account, hit create, hit pick&run, choose folder, then exe.
 ### Hit V1 or V2 again enter password, u done. (p.s pass types only once on 1st launch)
