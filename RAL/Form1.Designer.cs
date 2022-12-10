@@ -260,9 +260,9 @@
             this.button3.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button3.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.25F, System.Drawing.FontStyle.Bold);
             this.button3.ForeColor = System.Drawing.Color.White;
-            this.button3.Location = new System.Drawing.Point(154, 173);
+            this.button3.Location = new System.Drawing.Point(174, 172);
             this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(82, 34);
+            this.button3.Size = new System.Drawing.Size(62, 34);
             this.button3.TabIndex = 6;
             this.button3.Text = "Exit";
             this.button3.UseVisualStyleBackColor = false;
@@ -274,27 +274,27 @@
             this.button7.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button7.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold);
             this.button7.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.button7.Location = new System.Drawing.Point(56, 173);
+            this.button7.Location = new System.Drawing.Point(12, 172);
             this.button7.Name = "button7";
-            this.button7.Size = new System.Drawing.Size(44, 34);
+            this.button7.Size = new System.Drawing.Size(88, 34);
             this.button7.TabIndex = 7;
-            this.button7.Text = "V2";
+            this.button7.Text = "Launch";
             this.button7.UseVisualStyleBackColor = false;
             this.button7.Click += new System.EventHandler(this.button7_Click);
             // 
             // button2
             // 
-            this.button2.BackColor = System.Drawing.Color.MediumSeaGreen;
+            this.button2.BackColor = System.Drawing.Color.SandyBrown;
             this.button2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button2.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold);
+            this.button2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.button2.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.button2.Location = new System.Drawing.Point(12, 173);
+            this.button2.Location = new System.Drawing.Point(107, 172);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(44, 34);
-            this.button2.TabIndex = 8;
-            this.button2.Text = "V1";
+            this.button2.Size = new System.Drawing.Size(60, 34);
+            this.button2.TabIndex = 7;
+            this.button2.Text = "N:Path";
             this.button2.UseVisualStyleBackColor = false;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
+            this.button2.Click += new System.EventHandler(this.button2_Click_1);
             // 
             // Form1
             // 

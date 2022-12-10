@@ -4,6 +4,9 @@ using System.Windows.Forms;
 using System.Diagnostics;
 using System.IO;
 using Ookii.Dialogs.WinForms;
+using System.Security;
+using System.Net;
+
 
 namespace RAL
 {
@@ -160,6 +163,89 @@ namespace RAL
             Properties.Settings.Default.Save();
             Properties.Settings.Default.password = "";
             Properties.Settings.Default.Save();
+            pictureBox1.BackgroundImage = Properties.Resources.no48;
+            textBox1.ReadOnly = false;
+            textBox2.ReadOnly = false;
+            button1.Enabled = true;
+        }
+
+
+        private void button7_Click(object sender, EventArgs e) //v2 run
+        {
+
+            var fileContent = string.Empty;
+            var filePath = string.Empty;
+            var ressss = string.Empty;
+
+            if (
+                Properties.Settings.Default.user == "" && Properties.Settings.Default.password == ""
+            )
+            {
+                MessageBox.Show("Create USER !!!");
+            }
+
+            if (Properties.Settings.Default.fifleN == "")
+                try
+                {
+                    VistaFolderBrowserDialog dlg = new VistaFolderBrowserDialog();
+
+                    dlg.ShowNewFolderButton = true;
+                    if (dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                    {
+                        string fifleN = dlg.SelectedPath.Replace("\u005C", "\u002F");
+                        Properties.Settings.Default.fifleN = fifleN;
+                        Properties.Settings.Default.Save();
+                    }
+                }
+                catch { };
+
+            if (Properties.Settings.Default.exenameV2 == "")
+                using (OpenFileDialog openFileDialog = new OpenFileDialog())
+                {
+                    openFileDialog.Filter = "Exe file (*.exe)|*.exe";
+
+                    if (openFileDialog.ShowDialog() == DialogResult.OK)
+                    {
+                        //Get the path of specified file
+                        filePath = openFileDialog.FileName;
+                        ressss = Path.GetFileName(filePath);
+                        Properties.Settings.Default.exenameV2 = ressss;
+                        Properties.Settings.Default.Save();
+                    }
+                }
+
+
+            if ( Properties.Settings.Default.user != "" && Properties.Settings.Default.fifleN != "" || Properties.Settings.Default.user != "" && Properties.Settings.Default.exenameV2 != "" )
+                try
+                {
+                    string filfe = Properties.Settings.Default.fifleN;
+                    string exenameV2 = Properties.Settings.Default.exenameV2;
+                    string userStr = Properties.Settings.Default.user;
+                    string userPwd = Properties.Settings.Default.password;
+                    string path = System.IO.Directory.GetCurrentDirectory();
+                    string filename = userStr + "-V3.bat";
+                    string domains = System.Environment.UserDomainName;
+                    var exe = filfe + "\u002F" + exenameV2;
+                    Directory.SetCurrentDirectory(@"c:\users\public");
+                    var process = new Process();
+                    var securePassword = new SecureString();
+                    process.StartInfo.UseShellExecute = false;
+                    process.StartInfo.FileName = exe;
+                    process.StartInfo.Arguments = "/runAsOther";
+                    process.StartInfo.Domain = System.Environment.UserDomainName;
+                    process.StartInfo.UserName = userStr;
+                    var password = userPwd;
+                    for (int x = 0; x < password.Length; x++)
+                    securePassword.AppendChar(password[x]);
+                    process.StartInfo.Password = securePassword;
+                    process.Start();
+                }
+                catch { }
+            ;
+        }
+
+        private void button2_Click_1(object sender, EventArgs e)
+        {
             Properties.Settings.Default.fifle = "";
             Properties.Settings.Default.Save();
             Properties.Settings.Default.exename = "";
@@ -168,186 +254,9 @@ namespace RAL
             Properties.Settings.Default.Save();
             Properties.Settings.Default.exenameV2 = "";
             Properties.Settings.Default.Save();
-            pictureBox1.BackgroundImage = Properties.Resources.no48;
-            textBox1.ReadOnly = false;
-            textBox2.ReadOnly = false;
-            button1.Enabled = true;
-        }
-
-        private void button2_Click(object sender, EventArgs e) //v1 run
-        {
-            if (Properties.Settings.Default.fifleN == "")
-                try
-                {
-                    VistaFolderBrowserDialog dlg = new VistaFolderBrowserDialog();
-
-                    dlg.ShowNewFolderButton = true;
-                    if (dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-                    {
-                        string fifleN = dlg.SelectedPath.Replace("\u005C", "\u002F");
-                        Properties.Settings.Default.fifleN = fifleN;
-                        Properties.Settings.Default.Save();
-                    }
-                }
-                catch { }
-            ;
-            var fileContent = string.Empty;
-            var filePath = string.Empty;
-            var ressss = string.Empty;
-            if (Properties.Settings.Default.exename == "")
-                try
-                {
-                    using (OpenFileDialog openFileDialog = new OpenFileDialog())
-                    {
-                        openFileDialog.Filter = "Exe file (*.exe)|*.exe";
-
-                        if (openFileDialog.ShowDialog() == DialogResult.OK)
-                        {
-                            //Get the path of specified file
-                            filePath = openFileDialog.FileName;
-                            ressss = Path.GetFileName(filePath);
-                            string applicationPath = Path.GetFullPath(
-                                Properties.Settings.Default.fifleN
-                            );
-                            string saveFilePath = Path.Combine(applicationPath, ressss);
-                            Properties.Settings.Default.exename = filePath;
-                            Properties.Settings.Default.Save();
-                        }
-                    }
-                }
-                catch { }
-            ;
-            if (
-                Properties.Settings.Default.user == "" && Properties.Settings.Default.password == ""
-            )
-            {
-                MessageBox.Show("Create USER !!!");
-            }
-
-            if (
-                Properties.Settings.Default.user != ""
-                && Properties.Settings.Default.fifleN != ""
-                && Properties.Settings.Default.exename != ""
-            )
-                try
-                {
-                    string filfe = Properties.Settings.Default.fifleN;
-                    string exename = Properties.Settings.Default.exename;
-                    string userStr = Properties.Settings.Default.user;
-                    string userPwd = Properties.Settings.Default.password;
-                    string path = System.IO.Directory.GetCurrentDirectory();
-                    string filename = userStr + "-V1.bat";
-                    using (StreamWriter writer = File.CreateText(filename))
-                    {
-                        writer.WriteLine(
-                            "C:\\Windows\\System32\\runas.exe /user:"
-                                + userStr
-                                + " /savecred "
-                                + '\u0022'
-                                + "cmd /C cd \u005C\u0022"
-                                + filfe
-                                + "\u002F"
-                                + "\u005C"
-                                + "\" && "
-                                + exename
-                                + "\u0022"
-                        );
-                    }
-                    Process ps = new Process();
-                    ps.StartInfo.FileName = filename;
-                    // add process to list
-                    processlist.Add(ps);
-                    ps.Start();
-                }
-                catch { }
-            ;
-        }
-
-        private void button7_Click(object sender, EventArgs e) //v2 run
-        {
-            if (Properties.Settings.Default.fifleN == "")
-                try
-                {
-                    VistaFolderBrowserDialog dlg = new VistaFolderBrowserDialog();
-
-                    dlg.ShowNewFolderButton = true;
-                    if (dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-                    {
-                        string fifleN = dlg.SelectedPath.Replace("\u005C", "\u002F");
-                        Properties.Settings.Default.fifleN = fifleN;
-                        Properties.Settings.Default.Save();
-                    }
-                }
-                catch { }
-            ;
-            var fileContent = string.Empty;
-            var filePath = string.Empty;
-            var ressss = string.Empty;
-            if (Properties.Settings.Default.exenameV2 == "")
-                try
-                {
-                    using (OpenFileDialog openFileDialog = new OpenFileDialog())
-                    {
-                        openFileDialog.Filter = "Exe file (*.exe)|*.exe";
-
-                        if (openFileDialog.ShowDialog() == DialogResult.OK)
-                        {
-                            //Get the path of specified file
-                            filePath = openFileDialog.FileName;
-                            ressss = Path.GetFileName(filePath);
-                            Properties.Settings.Default.exenameV2 = ressss;
-                            Properties.Settings.Default.Save();
-                        }
-                    }
-                }
-                catch { }
-            ;
-            if (
-                Properties.Settings.Default.user == "" && Properties.Settings.Default.password == ""
-            )
-            {
-                MessageBox.Show("Create USER !!!");
-            }
-
-            if (
-                Properties.Settings.Default.user != ""
-                && Properties.Settings.Default.fifleN != ""
-                && Properties.Settings.Default.exename != ""
-            )
-                try
-                {
-                    string filfe = Properties.Settings.Default.fifleN;
-                    string exenameV2 = Properties.Settings.Default.exenameV2;
-                    string userStr = Properties.Settings.Default.user;
-                    string userPwd = Properties.Settings.Default.password;
-                    string path = System.IO.Directory.GetCurrentDirectory();
-                    string filename = userStr + "-V2.bat";
-                    using (StreamWriter writer = File.CreateText(filename))
-                    {
-                        writer.WriteLine(
-                            "C:\\Windows\\System32\\runas.exe /user:"
-                                + userStr
-                                + " /savecred "
-                                + '\u0022'
-                                + "cmd /C cd \u005C\u0022"
-                                + filfe
-                                + "\u002F"
-                                + "\u005C"
-                                + "\" && "
-                                + exenameV2
-                                + "\u0022"
-                        );
-                    }
-                    Process ps = new Process();
-                    ps.StartInfo.FileName = filename;
-                    // add process to list
-                    processlist.Add(ps);
-                    ps.Start();
-                }
-                catch { }
-            ;
         }
     }
+
     public static class OpenFileDialogExtensions
     {
         public static string ShowDialogAndReturnFileName(this OpenFileDialog dialog)
