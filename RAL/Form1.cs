@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using System.Diagnostics;
@@ -223,10 +223,9 @@ namespace RAL
                     string userStr = Properties.Settings.Default.user;
                     string userPwd = Properties.Settings.Default.password;
                     string path = System.IO.Directory.GetCurrentDirectory();
-                    string filename = userStr + "-V3.bat";
                     string domains = System.Environment.UserDomainName;
                     var exe = filfe + "\u002F" + exenameV2;
-                    Directory.SetCurrentDirectory(@"c:\users\public");
+                    Directory.SetCurrentDirectory(@filfe);
                     var process = new Process();
                     var securePassword = new SecureString();
                     process.StartInfo.UseShellExecute = false;
