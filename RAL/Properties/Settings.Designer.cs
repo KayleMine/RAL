@@ -94,5 +94,65 @@ namespace RAL.Properties {
                 this["exenameV2"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string third_party_ware_path {
+            get {
+                return ((string)(this["third_party_ware_path"]));
+            }
+            set {
+                this["third_party_ware_path"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string third_party_ware_exe {
+            get {
+                return ((string)(this["third_party_ware_exe"]));
+            }
+            set {
+                this["third_party_ware_exe"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int clock {
+            get {
+                return ((int)(this["clock"]));
+            }
+            set {
+                this["clock"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string toggled {
+            get {
+                return ((string)(this["toggled"]));
+            }
+            set {
+                this["toggled"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string timer {
+            get {
+                return ((string)(this["timer"]));
+            }
+            set {
+                this["timer"] = value;
+            }
+        }
     }
 }
