@@ -7,8 +7,12 @@
     using System.Security;
     using System.Net;
 using System.Threading;
-using System.Text;
+using SimpleImpersonation;
 using System.Text.RegularExpressions;
+using System.DirectoryServices;
+using System.Runtime.InteropServices;
+using System.Security.Principal;
+using System.Security.Authentication;
 
 namespace RAL
     {
@@ -16,7 +20,8 @@ namespace RAL
     {
         private int counter;
         System.Windows.Forms.Timer t = new System.Windows.Forms.Timer();
-
+        public  string NameLog;
+        public  string Pass;
         private void InitializeTimer()
         {
             counter = 0;
@@ -67,21 +72,26 @@ namespace RAL
                 return cp;
             }
         }
+
         private void button1_Click(object sender, EventArgs e) //create
         {
             if (textBox1.Text != "" && textBox2.Text != "")
-                try
+            try
                 {
-                    var proc1 = new ProcessStartInfo();
-                    string Command;
-                    proc1.UseShellExecute = true;
-                    Command = @"net user " + textBox1.Text + " " + textBox2.Text + " /add";
-                    proc1.WorkingDirectory = @"C:\Windows\System32";
-                    proc1.FileName = @"C:\Windows\System32\cmd.exe";
-                    proc1.Verb = "runas";
-                    proc1.Arguments = "/c " + Command;
-                    proc1.WindowStyle = ProcessWindowStyle.Hidden;
-                    Process.Start(proc1);
+                    NameLog = textBox1.Text;
+                    Pass = textBox2.Text;
+
+                    DirectoryEntry AD = new DirectoryEntry("WinNT://" + Environment.MachineName + ",computer");
+                    DirectoryEntry NewUser = AD.Children.Add(NameLog, "user");
+                    NewUser.Invoke("SetPassword", new object[] { Pass });
+                    NewUser.Invoke("Put", new object[] { "Description", "" });
+                    NewUser.CommitChanges();
+                    DirectoryEntry grp;
+                    
+                    grp = AD.Children.Find("Users", "group");
+                    if (grp != null) { grp.Invoke("Add", new object[] { NewUser.Path.ToString() }); }
+                   
+
                     Properties.Settings.Default.user = textBox1.Text;
                     Properties.Settings.Default.Save();
                     Properties.Settings.Default.password = textBox2.Text;
@@ -91,7 +101,8 @@ namespace RAL
                     textBox2.ReadOnly = true;
                     button1.Enabled = false;
                 }
-                catch { }
+                catch { };
+               
         }
 
         private void button5_Click(object sender, EventArgs e) //remove (user)
@@ -190,7 +201,7 @@ namespace RAL
 
 
 
-        private void button7_Click(object sender, EventArgs e) //v2 run
+        private void button7_Click(object sender, EventArgs e) //launch
         {
 
             var fileContent = string.Empty;
@@ -236,8 +247,9 @@ namespace RAL
 
 
             if (Properties.Settings.Default.user != "" && Properties.Settings.Default.fifleN != "" || Properties.Settings.Default.user != "" && Properties.Settings.Default.exenameV2 != "")
-                try
+              //  try
                 {
+
                     if (checkBox_after.Checked == true && Properties.Settings.Default.third_party_ware_path != "")
                     {
                         var exe = Properties.Settings.Default.third_party_ware_path + "\u002F" + Properties.Settings.Default.third_party_ware_exe;
@@ -257,11 +269,13 @@ namespace RAL
                     {
                         start_sequence();
                     }
+
                 }
-                catch { };
+               // catch { };
         }
 
 
+       // public bool LoadUserProfile { get; set; }
         private void third_party_sequence()
         {
             var exe = Properties.Settings.Default.third_party_ware_path + "\u002F" + Properties.Settings.Default.third_party_ware_exe;
@@ -274,26 +288,26 @@ namespace RAL
         }
         private void start_sequence()
         {
-            string filfe = Properties.Settings.Default.fifleN;
+            string filePath = Properties.Settings.Default.fifleN;
             string exenameV2 = Properties.Settings.Default.exenameV2;
             string userStr = Properties.Settings.Default.user;
             string userPwd = Properties.Settings.Default.password;
-            string path = System.IO.Directory.GetCurrentDirectory();
-            string domains = System.Environment.UserDomainName;
-            var exe = filfe + "\u002F" + exenameV2;
-            Directory.SetCurrentDirectory(@filfe);
+            var exe = filePath + "\u002F" + exenameV2;
+            Directory.SetCurrentDirectory(@filePath);
             var process = new Process();
             var securePassword = new SecureString();
             process.StartInfo.UseShellExecute = false;
             process.StartInfo.FileName = exe;
-            process.StartInfo.Arguments = "/runAsOther";
+            process.StartInfo.LoadUserProfile = true;
+            process.StartInfo.Verb = "runas";
             process.StartInfo.Domain = System.Environment.UserDomainName;
             process.StartInfo.UserName = userStr;
             var password = userPwd;
             for (int x = 0; x < password.Length; x++)
-                securePassword.AppendChar(password[x]);
+               securePassword.AppendChar(password[x]);
             process.StartInfo.Password = securePassword;
             process.Start();
+            
         }
         private void button2_Click_1(object sender, EventArgs e)
         {
@@ -466,6 +480,8 @@ namespace RAL
                 Properties.Settings.Default.Save();
             }
         }
+
+     
     }
 
     public static class OpenFileDialogExtensions

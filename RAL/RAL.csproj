@@ -71,6 +71,9 @@
       <HintPath>..\packages\Ookii.Dialogs.WinForms.4.0.0\lib\net462\Ookii.Dialogs.WinForms.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="SimpleImpersonation">
+      <HintPath>..\packages\SimpleImpersonation.4.2.0\lib\net461\SimpleImpersonation.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.DirectoryServices" />
     <Reference Include="System.Drawing" />

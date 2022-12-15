@@ -12,3 +12,4 @@ C:\Users\kirasaka\source\repos\Runner\RAL\RAL\obj\Release\Run As Limited.pdb
 C:\Users\kirasaka\source\repos\Runner\RAL\RAL\bin\Release\System.Security.Principal.Windows.xml
 C:\Users\kirasaka\source\repos\Runner\RAL\RAL\obj\Release\RAL.csproj.AssemblyReference.cache
 C:\Users\kirasaka\source\repos\Runner\RAL\RAL\obj\Release\RAL.csproj.CopyComplete
+C:\Users\kirasaka\source\repos\Runner\RAL\RAL\bin\Release\SimpleImpersonation.xml
