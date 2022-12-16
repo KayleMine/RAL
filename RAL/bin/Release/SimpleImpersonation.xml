@@ -1,0 +1,277 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>SimpleImpersonation</name>
+    </assembly>
+    <members>
+        <member name="T:SimpleImpersonation.Impersonation">
+            <summary>
+            Provides ability to run code within the context of a specific user.
+            </summary>
+        </member>
+        <member name="M:SimpleImpersonation.Impersonation.RunAsUser(SimpleImpersonation.UserCredentials,SimpleImpersonation.LogonType,System.Action)">
+            <summary>
+            Impersonates a specific user account to perform the specified action.
+            </summary>
+            <param name="credentials">The credentials of the user account to impersonate.</param>
+            <param name="logonType">The logon type used when impersonating the user account.</param>
+            <param name="action">The action to perform.</param>
+        </member>
+        <member name="M:SimpleImpersonation.Impersonation.RunAsUser(SimpleImpersonation.UserCredentials,SimpleImpersonation.LogonType,SimpleImpersonation.LogonProvider,System.Action)">
+            <summary>
+            Impersonates a specific user account to perform the specified action.
+            </summary>
+            <param name="credentials">The credentials of the user account to impersonate.</param>
+            <param name="logonType">The logon type used when impersonating the user account.</param>
+            <param name="logonProvider">The logon provider used when impersonating the user account.</param>
+            <param name="action">The action to perform.</param>
+        </member>
+        <member name="M:SimpleImpersonation.Impersonation.RunAsUser(SimpleImpersonation.UserCredentials,SimpleImpersonation.LogonType,System.Action{Microsoft.Win32.SafeHandles.SafeAccessTokenHandle})">
+            <summary>
+            Impersonates a specific user account to perform the specified action.
+            </summary>
+            <param name="credentials">The credentials of the user account to impersonate.</param>
+            <param name="logonType">The logon type used when impersonating the user account.</param>
+            <param name="action">The action to perform, which accepts a <see cref="T:Microsoft.Win32.SafeHandles.SafeAccessTokenHandle"/> to the user account as its only parameter.</param>
+        </member>
+        <member name="M:SimpleImpersonation.Impersonation.RunAsUser(SimpleImpersonation.UserCredentials,SimpleImpersonation.LogonType,SimpleImpersonation.LogonProvider,System.Action{Microsoft.Win32.SafeHandles.SafeAccessTokenHandle})">
+            <summary>
+            Impersonates a specific user account to perform the specified action.
+            </summary>
+            <param name="credentials">The credentials of the user account to impersonate.</param>
+            <param name="logonType">The logon type used when impersonating the user account.</param>
+            <param name="logonProvider">The logon provider used when impersonating the user account.</param>
+            <param name="action">The action to perform, which accepts a <see cref="T:Microsoft.Win32.SafeHandles.SafeAccessTokenHandle"/> to the user account as its only parameter.</param>
+        </member>
+        <member name="M:SimpleImpersonation.Impersonation.RunAsUser``1(SimpleImpersonation.UserCredentials,SimpleImpersonation.LogonType,System.Func{``0})">
+            <summary>
+            Impersonates a specific user account to execute the specified function.
+            </summary>
+            <typeparam name="T">The return type of the function.</typeparam>
+            <param name="credentials">The credentials of the user account to impersonate.</param>
+            <param name="logonType">The logon type used when impersonating the user account.</param>
+            <param name="function">The function to execute, which accepts a <see cref="T:Microsoft.Win32.SafeHandles.SafeAccessTokenHandle"/> to the user account as its only parameter.</param>
+            <returns>The result of executing the function.</returns>
+        </member>
+        <member name="M:SimpleImpersonation.Impersonation.RunAsUser``1(SimpleImpersonation.UserCredentials,SimpleImpersonation.LogonType,SimpleImpersonation.LogonProvider,System.Func{``0})">
+            <summary>
+            Impersonates a specific user account to execute the specified function.
+            </summary>
+            <typeparam name="T">The return type of the function.</typeparam>
+            <param name="credentials">The credentials of the user account to impersonate.</param>
+            <param name="logonType">The logon type used when impersonating the user account.</param>
+            <param name="logonProvider">The logon provider used when impersonating the user account.</param>
+            <param name="function">The function to execute, which accepts a <see cref="T:Microsoft.Win32.SafeHandles.SafeAccessTokenHandle"/> to the user account as its only parameter.</param>
+            <returns>The result of executing the function.</returns>
+        </member>
+        <member name="M:SimpleImpersonation.Impersonation.RunAsUser``1(SimpleImpersonation.UserCredentials,SimpleImpersonation.LogonType,System.Func{Microsoft.Win32.SafeHandles.SafeAccessTokenHandle,``0})">
+            <summary>
+            Impersonates a specific user account to execute the specified function.
+            </summary>
+            <typeparam name="T">The return type of the function.</typeparam>
+            <param name="credentials">The credentials of the user account to impersonate.</param>
+            <param name="logonType">The logon type used when impersonating the user account.</param>
+            <param name="function">The function to execute.</param>
+            <returns>The result of executing the function.</returns>
+        </member>
+        <member name="M:SimpleImpersonation.Impersonation.RunAsUser``1(SimpleImpersonation.UserCredentials,SimpleImpersonation.LogonType,SimpleImpersonation.LogonProvider,System.Func{Microsoft.Win32.SafeHandles.SafeAccessTokenHandle,``0})">
+            <summary>
+            Impersonates a specific user account to execute the specified function.
+            </summary>
+            <typeparam name="T">The return type of the function.</typeparam>
+            <param name="credentials">The credentials of the user account to impersonate.</param>
+            <param name="logonType">The logon type used when impersonating the user account.</param>
+            <param name="logonProvider">The logon provider used when impersonating the user account.</param>
+            <param name="function">The function to execute.</param>
+            <returns>The result of executing the function.</returns>
+        </member>
+        <member name="T:SimpleImpersonation.ImpersonationException">
+            <summary>
+            Exception thrown when impersonation fails.
+            </summary>
+            <remarks>
+            Inherits from <see cref="T:System.ApplicationException"/> for backwards compatibility reasons.
+            </remarks>
+        </member>
+        <member name="M:SimpleImpersonation.ImpersonationException.#ctor(System.ComponentModel.Win32Exception)">
+            <summary>
+            Initializes a new instance of the <see cref="T:SimpleImpersonation.ImpersonationException"/> class from a specific <see cref="T:System.ComponentModel.Win32Exception"/>.
+            </summary>
+            <param name="win32Exception">The exception to base this exception on.</param>
+        </member>
+        <member name="P:SimpleImpersonation.ImpersonationException.ErrorCode">
+            <summary>
+            Returns the Win32 error code handle for the exception.
+            </summary>
+        </member>
+        <member name="P:SimpleImpersonation.ImpersonationException.NativeErrorCode">
+            <summary>
+            Returns the Win32 native error code for the exception.
+            </summary>
+        </member>
+        <member name="T:SimpleImpersonation.LogonProvider">
+            <summary>
+            Specifies the type of login provider used.
+            http://msdn.microsoft.com/en-us/library/windows/desktop/aa378184.aspx
+            </summary>
+        </member>
+        <member name="F:SimpleImpersonation.LogonProvider.Default">
+            <summary>
+            Use the standard logon provider for the system. The default provider is "Negotiate".
+            However, if you pass NULL for the domain name and the user name is not in UPN format, then the default provider is "NTLM".
+            </summary>
+        </member>
+        <member name="F:SimpleImpersonation.LogonProvider.NTLM">
+            <summary>
+            Use the NTLM logon provider.
+            </summary>
+        </member>
+        <member name="F:SimpleImpersonation.LogonProvider.Negotiate">
+            <summary>
+            Use the Negotiate logon provider.
+            </summary>
+        </member>
+        <member name="F:SimpleImpersonation.LogonProvider.WINNT35">
+            <summary>
+            Use the WINNT35 logon provider.
+            </summary>
+        </member>
+        <member name="F:SimpleImpersonation.LogonProvider.WINNT40">
+            <summary>
+            Use the WINNT40 logon provider.
+            </summary>
+        </member>
+        <member name="F:SimpleImpersonation.LogonProvider.WINNT50">
+            <summary>
+            Use the WINNT50 logon provider.
+            </summary>
+        </member>
+        <member name="T:SimpleImpersonation.LogonType">
+            <summary>
+            Specifies the type of login used.
+            http://msdn.microsoft.com/en-us/library/windows/desktop/aa378184.aspx
+            </summary>
+        </member>
+        <member name="F:SimpleImpersonation.LogonType.Interactive">
+            <summary>
+            This logon type is intended for users who will be interactively using the computer, such as a user being logged
+            on by a terminal server, remote shell, or similar process. This logon type has the additional expense of caching
+            logon information for disconnected operations; therefore, it is inappropriate for some client/server applications,
+            such as a mail server.
+            </summary>
+        </member>
+        <member name="F:SimpleImpersonation.LogonType.Network">
+            <summary>
+            This logon type is intended for high performance servers to authenticate plaintext passwords.
+            The LogonUser function does not cache credentials for this logon type.
+            </summary>
+        </member>
+        <member name="F:SimpleImpersonation.LogonType.Batch">
+            <summary>
+            This logon type is intended for batch servers, where processes may be executing on behalf of a user
+            without their direct intervention. This type is also for higher performance servers that process many
+            plaintext authentication attempts at a time, such as mail or web servers.
+            </summary>
+        </member>
+        <member name="F:SimpleImpersonation.LogonType.Service">
+            <summary>
+            Indicates a service-type logon. The account provided must have the service privilege enabled. 
+            </summary>
+        </member>
+        <member name="F:SimpleImpersonation.LogonType.Unlock">
+            <summary>
+            GINAs are no longer supported.
+            Windows Server 2003 and Windows XP:  This logon type is for GINA DLLs that log on users who will be
+            interactively using the computer. This logon type can generate a unique audit record that shows when
+            the workstation was unlocked.
+            </summary>
+        </member>
+        <member name="F:SimpleImpersonation.LogonType.NetworkCleartext">
+            <summary>
+            This logon type preserves the name and password in the authentication package, which allows the server
+            to make connections to other network servers while impersonating the client. A server can accept plaintext
+            credentials from a client, call LogonUser, verify that the user can access the system across the network,
+            and still communicate with other servers.
+            </summary>
+        </member>
+        <member name="F:SimpleImpersonation.LogonType.NewCredentials">
+            <summary>
+            This logon type allows the caller to clone its current token and specify new credentials for outbound connections.
+            The new logon session has the same local identifier but uses different credentials for other network connections.
+            This logon type is supported only by the LOGON32_PROVIDER_WINNT50 logon provider.
+            </summary>
+        </member>
+        <member name="T:SimpleImpersonation.UserCredentials">
+            <summary>
+            Represents the credentials to be used for impersonation.
+            </summary>
+        </member>
+        <member name="P:SimpleImpersonation.UserCredentials.NetworkService">
+            <summary>
+            Credentials for "NT AUTHORITY\NETWORK SERVICE"
+            </summary>
+        </member>
+        <member name="P:SimpleImpersonation.UserCredentials.LocalSystem">
+            <summary>
+            Credentials for "NT AUTHORITY\SYSTEM"
+            </summary>
+        </member>
+        <member name="P:SimpleImpersonation.UserCredentials.LocalService">
+            <summary>
+            Credentials for "NT AUTHORITY\LOCAL SERVICE"
+            </summary>
+        </member>
+        <member name="M:SimpleImpersonation.UserCredentials.#ctor(System.String,System.String)">
+            <summary>
+            Creates a <see cref="T:SimpleImpersonation.UserCredentials"/> class based on a username and plaintext password.
+            The username can contain a domain name if specified in <c>domain\user</c> or <c>user@domain</c> form.
+            If no domain is provided, a local computer user account is assumed.
+            </summary>
+            <param name="username">The username.</param>
+            <param name="password">The password.</param>
+        </member>
+        <member name="M:SimpleImpersonation.UserCredentials.#ctor(System.String,System.String,System.String)">
+            <summary>
+            Creates a <see cref="T:SimpleImpersonation.UserCredentials"/> class based on a domain, username, and plaintext password.
+            </summary>
+            <param name="domain">The domain.</param>
+            <param name="username">The username.</param>
+            <param name="password">The password.</param>
+        </member>
+        <member name="M:SimpleImpersonation.UserCredentials.#ctor(System.String,System.Security.SecureString)">
+            <summary>
+            Creates a <see cref="T:SimpleImpersonation.UserCredentials"/> class based on a username and password, where the password is provided as a <see cref="T:System.Security.SecureString"/>.
+            The username can contain a domain name if specified in <c>domain\user</c> or <c>user@domain</c> form.
+            If no domain is provided, a local computer user account is assumed.
+            </summary>
+            <param name="username">The username.</param>
+            <param name="password">The password.</param>
+        </member>
+        <member name="M:SimpleImpersonation.UserCredentials.#ctor(System.String,System.String,System.Security.SecureString)">
+            <summary>
+            Creates a <see cref="T:SimpleImpersonation.UserCredentials"/> class based on a domain, username, and password, where the password is provided as a <see cref="T:System.Security.SecureString"/>.
+            </summary>
+            <param name="domain">The domain.</param>
+            <param name="username">The username.</param>
+            <param name="password">The password.</param>
+        </member>
+        <member name="M:SimpleImpersonation.UserCredentials.LogonUser(SimpleImpersonation.LogonType,SimpleImpersonation.LogonProvider)">
+            <summary>
+            Invokes the Win32 <a href="https://docs.microsoft.com/windows/win32/api/winbase/nf-winbase-logonusera">LogonUser</a>
+            API to log on with the credentials specified in the creation of this object.
+            The result is a <see cref="T:Microsoft.Win32.SafeHandles.SafeAccessTokenHandle"/> which can subsequently be used with methods such as 
+            <see cref="M:System.Security.Principal.WindowsIdentity.RunImpersonated(Microsoft.Win32.SafeHandles.SafeAccessTokenHandle,System.Action)"/>.
+            The handle should be used with a <c>using</c> block or statement, to log out the user when done.
+            </summary>
+            <param name="logonType">
+            The Windows logon type.  Typically <see cref="F:SimpleImpersonation.LogonType.NewCredentials"/> for simple network access,
+            or <see cref="F:SimpleImpersonation.LogonType.Interactive"/> for full logon in desktop applications.
+            </param>
+            <param name="logonProvider">The Windows logon provider.  Leave as default if uncertain.</param>
+            <returns>A <see cref="T:Microsoft.Win32.SafeHandles.SafeAccessTokenHandle"/> for the newly logged in user.</returns>
+        </member>
+        <member name="M:SimpleImpersonation.UserCredentials.ToString">
+            <inheritdoc />
+        </member>
+    </members>
+</doc>

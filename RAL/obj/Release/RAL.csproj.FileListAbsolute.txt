@@ -1,15 +1,16 @@
 C:\Users\kirasaka\source\repos\Runner\RAL\RAL\bin\Release\Run As Limited.exe.config
 C:\Users\kirasaka\source\repos\Runner\RAL\RAL\bin\Release\Run As Limited.exe
 C:\Users\kirasaka\source\repos\Runner\RAL\RAL\bin\Release\Run As Limited.pdb
+C:\Users\kirasaka\source\repos\Runner\RAL\RAL\bin\Release\SimpleImpersonation.xml
+C:\Users\kirasaka\source\repos\Runner\RAL\RAL\bin\Release\System.Security.Principal.Windows.xml
+C:\Users\kirasaka\source\repos\Runner\RAL\RAL\obj\Release\RAL.csproj.AssemblyReference.cache
 C:\Users\kirasaka\source\repos\Runner\RAL\RAL\obj\Release\RAL.csproj.SuggestedBindingRedirects.cache
 C:\Users\kirasaka\source\repos\Runner\RAL\RAL\obj\Release\RAL.Form1.resources
 C:\Users\kirasaka\source\repos\Runner\RAL\RAL\obj\Release\RAL.Properties.Resources.resources
 C:\Users\kirasaka\source\repos\Runner\RAL\RAL\obj\Release\RAL.csproj.GenerateResource.cache
 C:\Users\kirasaka\source\repos\Runner\RAL\RAL\obj\Release\RAL.csproj.CoreCompileInputs.cache
 C:\Users\kirasaka\source\repos\Runner\RAL\RAL\obj\Release\RAL.csproj.Fody.CopyLocal.cache
+C:\Users\kirasaka\source\repos\Runner\RAL\RAL\obj\Release\RAL.csproj.CopyComplete
 C:\Users\kirasaka\source\repos\Runner\RAL\RAL\obj\Release\Run As Limited.exe
 C:\Users\kirasaka\source\repos\Runner\RAL\RAL\obj\Release\Run As Limited.pdb
-C:\Users\kirasaka\source\repos\Runner\RAL\RAL\bin\Release\System.Security.Principal.Windows.xml
-C:\Users\kirasaka\source\repos\Runner\RAL\RAL\obj\Release\RAL.csproj.AssemblyReference.cache
-C:\Users\kirasaka\source\repos\Runner\RAL\RAL\obj\Release\RAL.csproj.CopyComplete
-C:\Users\kirasaka\source\repos\Runner\RAL\RAL\bin\Release\SimpleImpersonation.xml
+C:\Users\kirasaka\source\repos\Runner\RAL\RAL\obj\Release\RAL.Wellcum.resources

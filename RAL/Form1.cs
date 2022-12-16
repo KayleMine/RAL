@@ -5,14 +5,9 @@
     using System.IO;
     using Ookii.Dialogs.WinForms;
     using System.Security;
-    using System.Net;
 using System.Threading;
-using SimpleImpersonation;
-using System.Text.RegularExpressions;
 using System.DirectoryServices;
-using System.Runtime.InteropServices;
-using System.Security.Principal;
-using System.Security.Authentication;
+using Microsoft.Win32;
 
 namespace RAL
     {
@@ -30,38 +25,52 @@ namespace RAL
 
             t.Tick += new EventHandler(timer1_Tick);
         }
+        RegistryKey localMachine = RegistryKey.OpenBaseKey(Microsoft.Win32.RegistryHive.LocalMachine, RegistryView.Registry64);
         public Form1()
         {
             InitializeComponent();
-            InitializeTimer();
-            textBox5.ReadOnly = true;
-            if (Properties.Settings.Default.third_party_ware_exe != "")
-            { textBox5.Text = Properties.Settings.Default.third_party_ware_exe; button12.Enabled = false; }
-            if (Properties.Settings.Default.timer != "") { textBox6.Text = Properties.Settings.Default.timer; }
-            if (
-                    Properties.Settings.Default.user != "" && Properties.Settings.Default.password != ""
-                )
-                try
-                {
-                    textBox1.Text = Properties.Settings.Default.user;
-                    textBox2.Text = Properties.Settings.Default.password;
-                    pictureBox1.BackgroundImage = Properties.Resources.ok48;
-                    textBox1.ReadOnly = true;
-                    textBox2.ReadOnly = true;
-                    button1.Enabled = false;
-                }
-                catch { }
-            else
-                try
-                {
-                    pictureBox1.BackgroundImage = Properties.Resources.no48;
-                    textBox1.ReadOnly = false;
-                    textBox2.ReadOnly = false;
-                    button1.Enabled = true;
-                }
-                catch { }
-                ;
+            ConfigureWindowsRegistry();
+            var open = localMachine.OpenSubKey("Software\\VasyanWare\\", true).GetValue("1st_launch") as String;
+
+            Wellcum frm = new Wellcum();
+            if (open == "1")
+            {
+                frm.ShowDialog();
+            }
+            if (open == "0")
+            {
+                frm.Close();
+                InitializeTimer();
+                textBox5.ReadOnly = true;
+                if (Properties.Settings.Default.third_party_ware_exe != "")
+                { textBox5.Text = Properties.Settings.Default.third_party_ware_exe; button12.Enabled = false; }
+                if (Properties.Settings.Default.timer != "") { textBox6.Text = Properties.Settings.Default.timer; }
+                if (
+                        Properties.Settings.Default.user != "" && Properties.Settings.Default.password != ""
+                    )
+                    try
+                    {
+                        textBox1.Text = Properties.Settings.Default.user;
+                        textBox2.Text = Properties.Settings.Default.password;
+                        pictureBox1.BackgroundImage = Properties.Resources.ok48;
+                        textBox1.ReadOnly = true;
+                        textBox2.ReadOnly = true;
+                        button1.Enabled = false;
+                    }
+                    catch { }
+                else
+                    try
+                    {
+                        pictureBox1.BackgroundImage = Properties.Resources.no48;
+                        textBox1.ReadOnly = false;
+                        textBox2.ReadOnly = false;
+                        button1.Enabled = true;
+                    }
+                    catch { };
+            }
+
         }
+
         private const int CS_DropShadow = 0x00020000;
         protected override CreateParams CreateParams
         {
@@ -72,7 +81,19 @@ namespace RAL
                 return cp;
             }
         }
+        public void ConfigureWindowsRegistry()
+        {
+            var reg = localMachine.OpenSubKey("Software\\VasyanWare\\", true); // Компьютер\HKEY_LOCAL_MACHINE\SOFTWARE\VasyanWare
+            if (reg == null)
+            {
+                reg = localMachine.CreateSubKey("Software\\VasyanWare\\");
+            }
 
+            if (reg.GetValue("1st_launch") == null)
+            {
+                reg.SetValue("1st_launch", "1");
+            }
+        }
         private void button1_Click(object sender, EventArgs e) //create
         {
             if (textBox1.Text != "" && textBox2.Text != "")
@@ -119,15 +140,6 @@ namespace RAL
             Process.Start(proc1);
         }
 
-        List<Process> processlist = new List<Process>();
-        private void button3_Click(object sender, EventArgs e) // exit
-        {
-            foreach (var process in Process.GetProcessesByName("cmd"))
-            {
-                process.Kill();
-            }
-            this.Close();
-        }
 
         private void button4_Click_1(object sender, EventArgs e) // get user info
         {
@@ -176,16 +188,6 @@ namespace RAL
 
         private void button9_Click(object sender, EventArgs e) //reset
         {
-            var proc1 = new ProcessStartInfo();
-            string Command;
-            proc1.UseShellExecute = true;
-            Command = @"net user " + Properties.Settings.Default.user + " /delete";
-            proc1.WorkingDirectory = @"C:\Windows\System32";
-            proc1.FileName = @"C:\Windows\System32\cmd.exe";
-            proc1.Verb = "runas";
-            proc1.Arguments = "/c " + Command;
-            proc1.WindowStyle = ProcessWindowStyle.Hidden;
-            Process.Start(proc1);
             textBox1.Text = "";
             textBox2.Text = "";
             Properties.Settings.Default.user = "";
@@ -321,7 +323,7 @@ namespace RAL
             Properties.Settings.Default.Save();
         }
 
-        private void button12_Click(object sender, EventArgs e)
+        private void button12_Click(object sender, EventArgs e) // select 3rd party
         {
             if (Properties.Settings.Default.third_party_ware_path == "")
                 try
@@ -367,73 +369,7 @@ namespace RAL
             button12.Enabled = false;
         }
 
-        private void timer1_Tick(object sender, EventArgs e)
-        {
-            var num = int.Parse(textBox6.Text);
-            Properties.Settings.Default.clock = num;
-            Properties.Settings.Default.Save();
-            var sec = num / 0x3E8;
-            TimeSpan time = TimeSpan.FromSeconds(sec);
-            string str = time.ToString(@"mm\:ss");
-            label4.Text = str;
-
-            // if then if then if then if then if then if then if then if then if then if then if then if then if then 
-            if (checkBox_before.Checked == false && checkBox_after.Checked == false)
-            {
-                checkBox_restart.Enabled = false;
-            }            
-            
-            if (checkBox_before.Checked == false && checkBox_after.Checked == true)
-            { 
-                checkBox_restart.Enabled = true;
-            }
-
-            if (checkBox_before.Checked == true && checkBox_after.Checked == false )
-            {                
-                checkBox_restart.Enabled = true;
-            }
-           
-            if (checkBox_restart.Checked == true)
-            {
-                if (counter >= 100 )
-                {
-                    string app = Properties.Settings.Default.third_party_ware_exe;
-                    var text = app.Replace(".exe", "");
-
-                    Process[] pname = Process.GetProcessesByName(text);
-                    if (pname.Length == 0)
-                    {
-                        var exe = Properties.Settings.Default.third_party_ware_path + "\u002F" + Properties.Settings.Default.third_party_ware_exe;
-                        Thread.Sleep(2500);
-                        Process.Start(@exe);
-                    }
-                }
-                else
-                {
-                    counter++;
-                }
-            }
-            if (checkBox_after.Checked == true && checkBox_before.Checked == true)
-            {
-                Properties.Settings.Default.toggled = "stop";
-                Properties.Settings.Default.Save();
-            }
-            if (Properties.Settings.Default.toggled == "stop")
-            {
-                checkBox_before.Checked = false; checkBox_after.Checked = false;
-            }
-
-            if (Properties.Settings.Default.toggled == "before")
-            {
-                checkBox_before.Checked = true;
-            }            
-            if(Properties.Settings.Default.toggled == "after")
-            {
-                checkBox_after.Checked = true;
-            }
-        }
-
-        private void button10_Click(object sender, EventArgs e)
+        private void button10_Click(object sender, EventArgs e) // reset 3rd party
         {
             Properties.Settings.Default.third_party_ware_path = "";
             Properties.Settings.Default.Save();
@@ -481,7 +417,77 @@ namespace RAL
             }
         }
 
-     
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            var num = int.Parse(textBox6.Text);
+            Properties.Settings.Default.clock = num;
+            Properties.Settings.Default.Save();
+            var sec = num / 0x3E8;
+            TimeSpan time = TimeSpan.FromSeconds(sec);
+            string str = time.ToString(@"mm\:ss");
+            label4.Text = str;
+
+            // if then if then if then if then if then if then if then if then if then if then if then if then if then 
+            if (checkBox_before.Checked == false && checkBox_after.Checked == false)
+            {
+                checkBox_restart.Enabled = false;
+            }
+
+            if (checkBox_before.Checked == false && checkBox_after.Checked == true)
+            {
+                checkBox_restart.Enabled = true;
+            }
+
+            if (checkBox_before.Checked == true && checkBox_after.Checked == false)
+            {
+                checkBox_restart.Enabled = true;
+            }
+
+            if (checkBox_restart.Checked == true)
+            {
+                if (counter >= 100)
+                {
+                    string app = Properties.Settings.Default.third_party_ware_exe;
+                    var text = app.Replace(".exe", "");
+
+                    Process[] pname = Process.GetProcessesByName(text);
+                    if (pname.Length == 0)
+                    {
+                        var exe = Properties.Settings.Default.third_party_ware_path + "\u002F" + Properties.Settings.Default.third_party_ware_exe;
+                        Thread.Sleep(2500);
+                        Process.Start(@exe);
+                    }
+                }
+                else
+                {
+                    counter++;
+                }
+            }
+            if (checkBox_after.Checked == true && checkBox_before.Checked == true)
+            {
+                Properties.Settings.Default.toggled = "stop";
+                Properties.Settings.Default.Save();
+            }
+            if (Properties.Settings.Default.toggled == "stop")
+            {
+                checkBox_before.Checked = false; checkBox_after.Checked = false;
+            }
+
+            if (Properties.Settings.Default.toggled == "before")
+            {
+                checkBox_before.Checked = true;
+            }
+            if (Properties.Settings.Default.toggled == "after")
+            {
+                checkBox_after.Checked = true;
+            }
+        } // an loop
+
+        private void button3_Click(object sender, EventArgs e) // exit
+        {
+            Application.Exit();
+        }
+
     }
 
     public static class OpenFileDialogExtensions
