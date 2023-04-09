@@ -1,5 +1,6 @@
 <p align="center">
   <img width="289" height="217" src="https://i.imgur.com/MZ4hKKj.png">
+   <img width="289" height="217" src="https://i.imgur.com/cH9kfGw.png">
    <img width="289" height="217" src="https://i.imgur.com/0AzpzCA.png">
   
 </p>
@@ -15,4 +16,5 @@
 
 <h1> Important </h1> 
 
+### - Launch line options just type like: -option1 --option2 -option3 "whatever"
 ### - Remember that ur app settings and etc stuff may located in new user's Document folder. Navigate to "C:\Users" to find it.
