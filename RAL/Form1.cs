@@ -82,6 +82,8 @@ namespace RAL
         {
             SecurityIdentifier everyoneSid = new SecurityIdentifier(WellKnownSidType.BuiltinUsersSid, null);
             string everyone = everyoneSid.Translate(typeof(System.Security.Principal.NTAccount)).ToString();
+            string pattern = @"[^\\]*\\";
+            string usergroup = Regex.Replace(everyone, pattern, "");
             if (textBox1.Text != "" && textBox2.Text != "" || textBox1.Text != null && textBox2.Text != null)
                 try
                 {
@@ -94,8 +96,7 @@ namespace RAL
                     NewUser.Invoke("Put", new object[] { "Description", "" });
                     NewUser.CommitChanges();
                     DirectoryEntry grp;
-                    string users = everyone.Replace("BUILTIN\\", "").Replace("  ", " ");
-                    grp = AD.Children.Find(users, "group");
+                    grp = AD.Children.Find(usergroup, "group");
                     if (grp != null) { grp.Invoke("Add", new object[] { NewUser.Path.ToString() }); }
 
 
@@ -521,6 +522,7 @@ namespace RAL
             launch_box.Enabled = true;
             launch_sbox.Enabled = true;
         }
+
     }
 
     public static class OpenFileDialogExtensions

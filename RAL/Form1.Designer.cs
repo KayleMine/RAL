@@ -47,6 +47,7 @@
             this.button1 = new System.Windows.Forms.Button();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage5 = new System.Windows.Forms.TabPage();
+            this.launchbox_reset = new System.Windows.Forms.Button();
             this.launch_sbox = new System.Windows.Forms.Button();
             this.launch_box = new System.Windows.Forms.TextBox();
             this.tabPage3 = new System.Windows.Forms.TabPage();
@@ -68,7 +69,6 @@
             this.button7 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.launchbox_reset = new System.Windows.Forms.Button();
             tabPage4 = new System.Windows.Forms.TabPage();
             tabPage4.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -243,6 +243,18 @@
             this.tabPage5.TabIndex = 6;
             this.tabPage5.Text = "Launch Line";
             this.tabPage5.UseVisualStyleBackColor = true;
+            // 
+            // launchbox_reset
+            // 
+            this.launchbox_reset.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.launchbox_reset.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold);
+            this.launchbox_reset.Location = new System.Drawing.Point(6, 88);
+            this.launchbox_reset.Name = "launchbox_reset";
+            this.launchbox_reset.Size = new System.Drawing.Size(254, 32);
+            this.launchbox_reset.TabIndex = 4;
+            this.launchbox_reset.Text = "Reset";
+            this.launchbox_reset.UseVisualStyleBackColor = true;
+            this.launchbox_reset.Click += new System.EventHandler(this.launchbox_reset_Click);
             // 
             // launch_sbox
             // 
@@ -477,18 +489,6 @@
             // 
             this.timer1.Interval = 1000;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
-            // 
-            // launchbox_reset
-            // 
-            this.launchbox_reset.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.launchbox_reset.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold);
-            this.launchbox_reset.Location = new System.Drawing.Point(6, 88);
-            this.launchbox_reset.Name = "launchbox_reset";
-            this.launchbox_reset.Size = new System.Drawing.Size(254, 32);
-            this.launchbox_reset.TabIndex = 4;
-            this.launchbox_reset.Text = "Reset";
-            this.launchbox_reset.UseVisualStyleBackColor = true;
-            this.launchbox_reset.Click += new System.EventHandler(this.launchbox_reset_Click);
             // 
             // Form1
             // 
