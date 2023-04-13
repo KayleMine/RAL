@@ -15,4 +15,5 @@
 <h1> Important </h1> 
 
 ### - Launch line options just type like: -option1 --option2 -option3 "whatever"
+### - To open new user document folder launch something 1st since it not exist. Then click on folder icon!
 ### - Remember that ur app settings and etc stuff may located in new user's Document folder. Navigate to "C:\Users" to find it.
