@@ -1,11 +1,11 @@
-﻿    using System;
-    using System.Collections.Generic;
-    using System.Windows.Forms;
-    using System.Diagnostics;
-    using System.IO;
-    using Ookii.Dialogs.WinForms;
-    using System.Security;
-    using System.Net;
+﻿using System;
+using System.Collections.Generic;
+using System.Windows.Forms;
+using System.Diagnostics;
+using System.IO;
+using Ookii.Dialogs.WinForms;
+using System.Security;
+using System.Net;
 using System.Threading;
 using SimpleImpersonation;
 using System.Text.RegularExpressions;
@@ -17,15 +17,18 @@ using RAL.Properties;
 using System.Security.Cryptography;
 using System.Net.NetworkInformation;
 using System.Web;
-
+using log4net.Repository.Hierarchy;
+using log4net;
+using log4net.Config;
 namespace RAL
-    {
+{
     public partial class Form1 : Form
     {
         private int counter;
         System.Windows.Forms.Timer t = new System.Windows.Forms.Timer();
         public string NameLog;
         public string Pass;
+        public static readonly ILog log = LogManager.GetLogger(typeof(Form1));
         private void InitializeTimer()
         {
             counter = 0;
@@ -37,15 +40,27 @@ namespace RAL
         public Form1()
         {
             InitializeComponent();
+            log4net.Config.XmlConfigurator.Configure();
             InitializeTimer();
             textBox5.ReadOnly = true;
             if (Properties.Settings.Default.third_party_ware_exe != "")
-            { textBox5.Text = Properties.Settings.Default.third_party_ware_exe; button12.Enabled = false; }
-            if (Settings.Default.command_line != "" && Settings.Default.command_line != null) { launch_box.Text = Settings.Default.command_line; launch_sbox.Enabled = false; launch_box.Enabled = false;}
-            if (Properties.Settings.Default.timer != "") { textBox6.Text = Properties.Settings.Default.timer; }
+            {
+                textBox5.Text = Properties.Settings.Default.third_party_ware_exe;
+                button12.Enabled = false;
+            }
+            if (Settings.Default.command_line != "" && Settings.Default.command_line != null)
+            {
+                launch_box.Text = Settings.Default.command_line;
+                launch_sbox.Enabled = false;
+                launch_box.Enabled = false;
+            }
+            if (Properties.Settings.Default.timer != "")
+            {
+                textBox6.Text = Properties.Settings.Default.timer;
+            }
             if (
-                    Properties.Settings.Default.user != "" && Properties.Settings.Default.password != ""
-                )
+                Properties.Settings.Default.user != "" && Properties.Settings.Default.password != ""
+            )
                 try
                 {
                     textBox1.Text = Properties.Settings.Default.user;
@@ -55,7 +70,10 @@ namespace RAL
                     textBox2.ReadOnly = true;
                     button1.Enabled = false;
                 }
-                catch { }
+                catch (Exception error)
+                {
+                    log.Info(error.Message); MessageBox.Show(error.Message);
+                }
             else
                 try
                 {
@@ -65,7 +83,7 @@ namespace RAL
                     button1.Enabled = true;
                 }
                 catch { }
-                ;
+            ;
         }
         private const int CS_DropShadow = 0x00020000;
         protected override CreateParams CreateParams
@@ -80,16 +98,18 @@ namespace RAL
 
         private void button1_Click(object sender, EventArgs e) //create
         {
-            SecurityIdentifier everyoneSid = new SecurityIdentifier(WellKnownSidType.BuiltinUsersSid, null);
+            SecurityIdentifier everyoneSid = new SecurityIdentifier(
+                WellKnownSidType.BuiltinUsersSid,
+                null
+            );
             string everyone = everyoneSid.Translate(typeof(System.Security.Principal.NTAccount)).ToString();
             string pattern = @"[^\\]*\\";
             string usergroup = Regex.Replace(everyone, pattern, "");
-            if (textBox1.Text != "" && textBox2.Text != "" || textBox1.Text != null && textBox2.Text != null)
+            if (textBox1.Text != "" && textBox2.Text != "" || textBox1.Text != null && textBox2.Text != null  )
                 try
                 {
                     NameLog = textBox1.Text;
                     Pass = textBox2.Text;
-
                     DirectoryEntry AD = new DirectoryEntry("WinNT://" + Environment.MachineName + ",computer");
                     DirectoryEntry NewUser = AD.Children.Add(NameLog, "user");
                     NewUser.Invoke("SetPassword", new object[] { Pass });
@@ -97,8 +117,15 @@ namespace RAL
                     NewUser.CommitChanges();
                     DirectoryEntry grp;
                     grp = AD.Children.Find(usergroup, "group");
-                    if (grp != null) { grp.Invoke("Add", new object[] { NewUser.Path.ToString() }); }
-
+                    if (grp != null)
+                        try
+                        {
+                            grp.Invoke("Add", new object[] { NewUser.Path.ToString() });
+                        }
+                        catch (Exception error)
+                        {
+                            log.Info("User groups - Add :: " + error.Message); MessageBox.Show(error.Message);
+                        }
 
                     Settings.Default.user = NameLog;
                     Settings.Default.Save();
@@ -110,7 +137,10 @@ namespace RAL
                     textBox2.ReadOnly = true;
                     button1.Enabled = false;
                 }
-                catch (Exception a) { MessageBox.Show(a.ToString()); };
+                catch (Exception error)
+                {
+                    log.Info("User groups general :: "+error.Message); MessageBox.Show(error.Message);
+                }
         }
 
         private void button5_Click(object sender, EventArgs e) //remove (user)
@@ -125,6 +155,7 @@ namespace RAL
             proc1.Arguments = "/c " + Command;
             proc1.WindowStyle = ProcessWindowStyle.Hidden;
             Process.Start(proc1);
+            textBox4.Text = null;
         }
 
         List<Process> processlist = new List<Process>();
@@ -206,183 +237,250 @@ namespace RAL
             button1.Enabled = true;
         }
 
-
-
-
         private void button7_Click(object sender, EventArgs e) //launch
         {
-
             var fileContent = string.Empty;
             var filePath = string.Empty;
             var ressss = string.Empty;
-
-            if (
-                Properties.Settings.Default.user == "" && Properties.Settings.Default.password == ""
-            )
+            if (Properties.Settings.Default.user == "" && Properties.Settings.Default.password == "")
             {
                 MessageBox.Show("Create USER !!!");
+                log.Info("Launch :: User not exists.");
             }
-
-            if (Properties.Settings.Default.fifleN == "")
-                try
+            if (Properties.Settings.Default.fifleN == "") try
                 {
                     VistaFolderBrowserDialog dlg = new VistaFolderBrowserDialog();
-
                     dlg.ShowNewFolderButton = true;
-                    if (dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-                    {
-                        string fifleN = dlg.SelectedPath.Replace("\u005C", "\u002F");
-                        Properties.Settings.Default.fifleN = fifleN;
-                        Properties.Settings.Default.Save();
-                    }
+                    if (dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK) try
+                        {
+                            string fifleN = dlg.SelectedPath.Replace("\u005C", "\u002F");
+                            Properties.Settings.Default.fifleN = fifleN;
+                            Properties.Settings.Default.Save();
+                        }
+                        catch (Exception error)
+                        {
+                            log.Info("Launch - folder :: " + error.Message);
+                            MessageBox.Show(error.Message);
+                        }
                 }
-                catch { };
-
-            if (Properties.Settings.Default.exenameV2 == "")
-                using (OpenFileDialog openFileDialog = new OpenFileDialog())
+                catch (Exception error)
                 {
-                    openFileDialog.Filter = "Exe file (*.exe)|*.exe";
-
-                    if (openFileDialog.ShowDialog() == DialogResult.OK)
+                    log.Info("Launch - folder general :: " + error.Message);
+                    MessageBox.Show(error.Message);
+                }
+            if (Properties.Settings.Default.exenameV2 == "") try
+                {
+                    using (OpenFileDialog openFileDialog = new OpenFileDialog())
                     {
-                        //Get the path of specified file
-                        filePath = openFileDialog.FileName;
-                        ressss = Path.GetFileName(filePath);
-                        Properties.Settings.Default.exenameV2 = ressss;
-                        Properties.Settings.Default.Save();
+                        openFileDialog.Filter = "Exe file (*.exe)|*.exe";
+                        if (openFileDialog.ShowDialog() == DialogResult.OK) try
+                            {
+                                //Get the path of specified file
+                                filePath = openFileDialog.FileName;
+                                ressss = Path.GetFileName(filePath);
+                                Properties.Settings.Default.exenameV2 = ressss;
+                                Properties.Settings.Default.Save();
+                            }
+                            catch (Exception error)
+                            {
+                                log.Info("Launch - executable :: " + error.Message);
+                                MessageBox.Show(error.Message);
+                            }
                     }
                 }
-
-
+                catch (Exception error)
+                {
+                    log.Info("Launch - exe general :: " + error.Message);
+                    MessageBox.Show(error.Message);
+                }
             if (Properties.Settings.Default.user != "" && Properties.Settings.Default.fifleN != "" || Properties.Settings.Default.user != "" && Properties.Settings.Default.exenameV2 != "")
-            //  try
             {
-
-                if (checkBox_after.Checked == true && Properties.Settings.Default.third_party_ware_path != "")
-                {
-                    var exe = Properties.Settings.Default.third_party_ware_path + "\u002F" + Properties.Settings.Default.third_party_ware_exe;
-                    start_sequence();
-                    Thread.Sleep(TimeSpan.FromMilliseconds(Properties.Settings.Default.clock));
-                    third_party_sequence();
-                    //  MessageBox.Show(exe + " started  - after::true");
-                }
-                if (checkBox_before.Checked == true && Properties.Settings.Default.third_party_ware_path != "")
-                {
-                    third_party_sequence();
-                    //   MessageBox.Show(exe + " started  - before::true");
-                    Thread.Sleep(TimeSpan.FromMilliseconds(Properties.Settings.Default.clock));
-                    start_sequence();
-                }
-                if (checkBox_after.Checked == false && checkBox_before.Checked == false || Properties.Settings.Default.third_party_ware_path == "")
-                {
-                    start_sequence();
-                }
-
+                if (checkBox_after.Checked == true && Properties.Settings.Default.third_party_ware_path != "") try
+                    {
+                        var exe = Properties.Settings.Default.third_party_ware_path + "\u002F" + Properties.Settings.Default.third_party_ware_exe;
+                        start_sequence();
+                        Thread.Sleep(TimeSpan.FromMilliseconds(Properties.Settings.Default.clock));
+                        third_party_sequence();
+                        //  MessageBox.Show(exe + " started  - after::true");
+                    }
+                    catch (Exception error)
+                    {
+                        log.Info("Load - Seq. -> 3rd :: " + error.Message);
+                        MessageBox.Show(error.Message);
+                    }
+                if (checkBox_before.Checked == true && Properties.Settings.Default.third_party_ware_path != "") try
+                    {
+                        third_party_sequence();
+                        //   MessageBox.Show(exe + " started  - before::true");
+                        Thread.Sleep(TimeSpan.FromMilliseconds(Properties.Settings.Default.clock));
+                        start_sequence();
+                    }
+                    catch (Exception error)
+                    {
+                        log.Info("Load - Seq. <- 3rd :: " + error.Message);
+                        MessageBox.Show(error.Message);
+                    }
+                if (checkBox_after.Checked == false && checkBox_before.Checked == false || Properties.Settings.Default.third_party_ware_path == "") try
+                    {
+                        start_sequence();
+                    }
+                    catch (Exception error)
+                    {
+                        log.Info("Load - seq. :: " + error.Message);
+                        MessageBox.Show(error.Message);
+                    }
             }
-            // catch { };
         }
-
 
         // public bool LoadUserProfile { get; set; }
         private void third_party_sequence()
         {
-            var exe = Properties.Settings.Default.third_party_ware_path + "\u002F" + Properties.Settings.Default.third_party_ware_exe;
-            Directory.SetCurrentDirectory(@Properties.Settings.Default.third_party_ware_path);
-            var process = new Process();
-            var securePassword = new SecureString();
-            process.StartInfo.UseShellExecute = false;
-            process.StartInfo.FileName = exe;
-            process.Start();
+            try
+            {
+                var exe = Properties.Settings.Default.third_party_ware_path + "\u002F" + Properties.Settings.Default.third_party_ware_exe;
+                Directory.SetCurrentDirectory(@Properties.Settings.Default.third_party_ware_path);
+                var process = new Process();
+                var securePassword = new SecureString();
+                process.StartInfo.UseShellExecute = false;
+                process.StartInfo.FileName = exe;
+                process.Start();
+            }
+            catch (Exception error)
+            {
+                log.Info("Start - 3rd seq. :: " + error.Message);
+                MessageBox.Show(error.Message);
+            }
         }
         private void start_sequence()
         {
-
-            string start;
+            string commandLineArguments;
             if (Properties.Settings.Default.command_line != "" && Properties.Settings.Default.command_line != null)
             {
-                start = String.Format(Properties.Settings.Default.command_line);
+                commandLineArguments = String.Format(Properties.Settings.Default.command_line);
             }
             else
             {
-                start = "";
+                commandLineArguments = "";
             }
-            string filePath = Properties.Settings.Default.fifleN;
-            string exenameV2 = Properties.Settings.Default.exenameV2;
-            string userStr = Properties.Settings.Default.user;
-            string userPwd = Properties.Settings.Default.password;
-            var exe = filePath + "\u002F" + exenameV2;
-            Directory.SetCurrentDirectory(@filePath);
-            var process = new Process();
-            var securePassword = new SecureString();
-            process.StartInfo.UseShellExecute = false;
-            process.StartInfo.FileName = exe;
-            process.StartInfo.LoadUserProfile = true;
-            process.StartInfo.Verb = "runas";
-            process.StartInfo.Domain = System.Environment.UserDomainName;
-            process.StartInfo.UserName = userStr;
-            process.StartInfo.Arguments = start;
-            var password = userPwd;
-            for (int x = 0; x < password.Length; x++)
-               securePassword.AppendChar(password[x]);
-            process.StartInfo.Password = securePassword;
-            process.Start();
 
+            string filePath = Properties.Settings.Default.fifleN;
+            string exeNameV2 = Properties.Settings.Default.exenameV2;
+            string userName = Properties.Settings.Default.user;
+            string userPassword = Properties.Settings.Default.password;
+
+            string fullExePath = Path.Combine(filePath, exeNameV2);
+
+            try
+            {
+                Directory.SetCurrentDirectory(filePath);
+
+                var process = new Process();
+                var securePassword = new SecureString();
+
+                process.StartInfo.UseShellExecute = false;
+                process.StartInfo.FileName = fullExePath;
+                process.StartInfo.LoadUserProfile = true;
+                process.StartInfo.Verb = "runas";
+                process.StartInfo.Domain = System.Environment.UserDomainName;
+                process.StartInfo.UserName = userName;
+                process.StartInfo.Arguments = commandLineArguments;
+
+                foreach (char c in userPassword)
+                {
+                    securePassword.AppendChar(c);
+                }
+
+                process.StartInfo.Password = securePassword;
+                process.Start();
+            }
+            catch (Exception error)
+            {
+                log.Info("Start - seq. :: " + error.Message);
+                MessageBox.Show(error.Message);
+            }
         }
+
         private void button2_Click_1(object sender, EventArgs e)
         {
-            Properties.Settings.Default.fifle = "";
-            Properties.Settings.Default.Save();
-            Properties.Settings.Default.exename = "";
-            Properties.Settings.Default.Save();
-            Properties.Settings.Default.fifleN = "";
-            Properties.Settings.Default.Save();
-            Properties.Settings.Default.exenameV2 = "";
-            Properties.Settings.Default.Save();
+            if (Properties.Settings.Default.fifleN != "")
+            {
+                Properties.Settings.Default.fifleN = "";
+                Properties.Settings.Default.Save();
+            }
+            if (Properties.Settings.Default.exenameV2 != "")
+            {
+                Properties.Settings.Default.exenameV2 = "";
+                Properties.Settings.Default.Save();
+            }
         }
 
         private void button12_Click(object sender, EventArgs e)
         {
-            if (Properties.Settings.Default.third_party_ware_path == "")
+            // Check if the path and executable for the third-party ware have been set
+            if (Properties.Settings.Default.third_party_ware_path == "" || Properties.Settings.Default.third_party_ware_exe == "")
+            {
                 try
                 {
-                    VistaFolderBrowserDialog dlg = new VistaFolderBrowserDialog();
-
-                    dlg.ShowNewFolderButton = true;
-                    if (dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-                    {
-                        string path_o = dlg.SelectedPath.Replace("\u005C", "\u002F");
-                        Properties.Settings.Default.third_party_ware_path = path_o;
-                        Properties.Settings.Default.Save();
-                    }
+                    // Create a VistaFolderBrowserDialog to select the path for the third-party ware
+                    VistaFolderBrowserDialog folderBrowserDialog = new VistaFolderBrowserDialog();
+                    folderBrowserDialog.ShowNewFolderButton = true;
+                    // If the user selects a folder, save the path to the settings
+                    if (folderBrowserDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK) try
+                        {
+                            string path = folderBrowserDialog.SelectedPath.Replace("\u005C", "\u002F");
+                            Properties.Settings.Default.third_party_ware_path = path;
+                            Properties.Settings.Default.Save();
+                        }
+                        catch (Exception error)
+                        {
+                            log.Info("Path - 3rd - folder :: "+error.Message);
+                            MessageBox.Show(error.Message);
+                        }
                 }
-                catch { };
-
-            if (Properties.Settings.Default.third_party_ware_exe == "")
-
-                using (OpenFileDialog openFileDialog = new OpenFileDialog())
+                catch (Exception error)
                 {
-                    var fileContent = string.Empty;
-                    var filePath = string.Empty;
-                    var path_f = string.Empty;
-
-                    openFileDialog.Filter = "Exe file (*.exe)|*.exe";
-
-                    if (openFileDialog.ShowDialog() == DialogResult.OK)
-                    {
-                        //Get the path of specified file
-                        filePath = openFileDialog.FileName;
-                        path_f = Path.GetFileName(filePath);
-                        Properties.Settings.Default.third_party_ware_exe = path_f;
-                        Properties.Settings.Default.Save();
-                    }
+                    log.Info("Path - 3rd - general folder :: " + error.Message);
+                    MessageBox.Show(error.Message);
                 }
 
+                try
+                {
+                    // Create an OpenFileDialog to select the executable for the third-party ware
+                    using (OpenFileDialog openFileDialog = new OpenFileDialog())
+                    {
+                        openFileDialog.Filter = "Exe file (*.exe)|*.exe";
 
+                        // If the user selects a file, save the executable name to the settings
+                        if (openFileDialog.ShowDialog() == DialogResult.OK)
+                            try
+                            {
+                                string filePath = openFileDialog.FileName;
+                                string executableName = Path.GetFileName(filePath);
+                                Properties.Settings.Default.third_party_ware_exe = executableName;
+                                Properties.Settings.Default.Save();
+                            }
+                            catch (Exception error)
+                            {
+                                log.Info("Path - 3rd - exe :: " + error.Message); MessageBox.Show(error.Message);
+                            }
+                    }
+                }
+                catch (Exception error)
+                {
+                    log.Info("Path - 3rd - general exe :: " + error.Message); MessageBox.Show(error.Message);
+                }
+            }
 
-            if (Properties.Settings.Default.third_party_ware_path != "" && Properties.Settings.Default.third_party_ware_exe != "")
+            // If the path and executable for the third-party ware have been set, display the executable name in the text box
+            if (
+                Properties.Settings.Default.third_party_ware_path != ""
+                && Properties.Settings.Default.third_party_ware_exe != ""
+            )
             {
                 textBox5.Text = Properties.Settings.Default.third_party_ware_exe;
             }
+
+            // Disable the button once the configuration is complete
             button12.Enabled = false;
         }
 
@@ -396,25 +494,25 @@ namespace RAL
             string str = time.ToString(@"mm\:ss");
             label4.Text = str;
 
-            // if then if then if then if then if then if then if then if then if then if then if then if then if then 
+            // if then if then if then if then if then if then if then if then if then if then if then if then if then
             if (checkBox_before.Checked == false && checkBox_after.Checked == false)
             {
                 checkBox_restart.Enabled = false;
-            }            
-            
+            }
+
             if (checkBox_before.Checked == false && checkBox_after.Checked == true)
-            { 
+            {
                 checkBox_restart.Enabled = true;
             }
 
-            if (checkBox_before.Checked == true && checkBox_after.Checked == false )
-            {                
+            if (checkBox_before.Checked == true && checkBox_after.Checked == false)
+            {
                 checkBox_restart.Enabled = true;
             }
-           
+
             if (checkBox_restart.Checked == true)
             {
-                if (counter >= 100 )
+                if (counter >= 100)
                 {
                     string app = Properties.Settings.Default.third_party_ware_exe;
                     var text = app.Replace(".exe", "");
@@ -422,7 +520,10 @@ namespace RAL
                     Process[] pname = Process.GetProcessesByName(text);
                     if (pname.Length == 0)
                     {
-                        var exe = Properties.Settings.Default.third_party_ware_path + "\u002F" + Properties.Settings.Default.third_party_ware_exe;
+                        var exe =
+                            Properties.Settings.Default.third_party_ware_path
+                            + "\u002F"
+                            + Properties.Settings.Default.third_party_ware_exe;
                         Thread.Sleep(2500);
                         Process.Start(@exe);
                     }
@@ -439,14 +540,15 @@ namespace RAL
             }
             if (Properties.Settings.Default.toggled == "stop")
             {
-                checkBox_before.Checked = false; checkBox_after.Checked = false;
+                checkBox_before.Checked = false;
+                checkBox_after.Checked = false;
             }
 
             if (Properties.Settings.Default.toggled == "before")
             {
                 checkBox_before.Checked = true;
-            }            
-            if(Properties.Settings.Default.toggled == "after")
+            }
+            if (Properties.Settings.Default.toggled == "after")
             {
                 checkBox_after.Checked = true;
             }
@@ -472,12 +574,11 @@ namespace RAL
 
         private void checkBox_after_CheckedChanged(object sender, EventArgs e)
         {
-
             if (checkBox_after.Checked == true)
             {
                 Properties.Settings.Default.toggled = "after";
                 Properties.Settings.Default.Save();
-            }      
+            }
             else
             {
                 Properties.Settings.Default.toggled = "stop";
@@ -487,7 +588,6 @@ namespace RAL
 
         private void checkBox_before_CheckedChanged(object sender, EventArgs e)
         {
-
             if (checkBox_before.Checked == true)
             {
                 Properties.Settings.Default.toggled = "before";
@@ -504,15 +604,17 @@ namespace RAL
         {
             if (launch_box.Text != "" && launch_box.Text != " " && launch_box.Text != null)
                 try
-            {
-                Settings.Default.command_line = launch_box.Text;
-                Settings.Default.Save();
-                launch_sbox.Enabled = false;
-                launch_box.Enabled = false;
-            }
-                catch (Exception a) { MessageBox.Show(a.ToString()); };
-
-
+                {
+                    Settings.Default.command_line = launch_box.Text;
+                    Settings.Default.Save();
+                    launch_sbox.Enabled = false;
+                    launch_box.Enabled = false;
+                }
+                catch (Exception a)
+                {
+                    MessageBox.Show(a.ToString());
+                }
+            ;
         }
 
         private void launchbox_reset_Click(object sender, EventArgs e)
@@ -523,14 +625,31 @@ namespace RAL
             launch_sbox.Enabled = true;
         }
 
+        private void button13_Click(object sender, EventArgs e) // open settings
+        {
+            if (
+                Properties.Settings.Default.user == "" && Properties.Settings.Default.password == ""
+            )
+            {
+                log.Info("User not exists"); MessageBox.Show("Create USER !!!");
+            }
+            else
+            {
+                string username = Properties.Settings.Default.user;
+                string path = @"C:\Users\" + username + @"\Documents\";
+                Process.Start("explorer.exe", path);
+            }
+        }
+
+        private void toolStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e) { }
     }
 
     public static class OpenFileDialogExtensions
+    {
+        public static string ShowDialogAndReturnFileName(this OpenFileDialog dialog)
         {
-            public static string ShowDialogAndReturnFileName(this OpenFileDialog dialog)
-            {
-                dialog.ShowDialog();
-                return dialog.FileName;
-            }
+            dialog.ShowDialog();
+            return dialog.FileName;
         }
     }
+}

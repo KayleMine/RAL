@@ -38,7 +38,6 @@
             this.button11 = new System.Windows.Forms.Button();
             this.textBox10 = new System.Windows.Forms.TextBox();
             this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.button9 = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
@@ -66,17 +65,20 @@
             this.button4 = new System.Windows.Forms.Button();
             this.textBox3 = new System.Windows.Forms.TextBox();
             this.button3 = new System.Windows.Forms.Button();
-            this.button7 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.button2 = new System.Windows.Forms.Button();
+            this.button7 = new System.Windows.Forms.Button();
+            this.button13 = new System.Windows.Forms.Button();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             tabPage4 = new System.Windows.Forms.TabPage();
             tabPage4.SuspendLayout();
             this.tabPage1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.tabPage5.SuspendLayout();
             this.tabPage3.SuspendLayout();
             this.tabPage2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // tabPage4
@@ -109,6 +111,7 @@
             this.textBox4.Name = "textBox4";
             this.textBox4.Size = new System.Drawing.Size(254, 20);
             this.textBox4.TabIndex = 0;
+            this.toolTip1.SetToolTip(this.textBox4, "Type username here.");
             // 
             // button8
             // 
@@ -151,15 +154,6 @@
             this.tabPage1.Text = "Make user";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
-            // pictureBox1
-            // 
-            this.pictureBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.pictureBox1.Location = new System.Drawing.Point(117, 91);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(32, 32);
-            this.pictureBox1.TabIndex = 8;
-            this.pictureBox1.TabStop = false;
-            // 
             // button9
             // 
             this.button9.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -169,6 +163,8 @@
             this.button9.Size = new System.Drawing.Size(78, 32);
             this.button9.TabIndex = 7;
             this.button9.Text = "Reset";
+            this.toolTip1.SetToolTip(this.button9, "Only resets user but not delete.\r\nCarefully u can\'t use existing-one again.\r\nTo d" +
+        "elete user goto remove user tab.");
             this.button9.UseVisualStyleBackColor = true;
             this.button9.Click += new System.EventHandler(this.button9_Click);
             // 
@@ -275,6 +271,7 @@
             this.launch_box.Name = "launch_box";
             this.launch_box.Size = new System.Drawing.Size(254, 20);
             this.launch_box.TabIndex = 2;
+            this.toolTip1.SetToolTip(this.launch_box, "Type ur arguments.\r\nExample: -option1 --option2 -option3  \"whatever\"");
             // 
             // tabPage3
             // 
@@ -357,6 +354,7 @@
             this.button10.Size = new System.Drawing.Size(60, 27);
             this.button10.TabIndex = 8;
             this.button10.Text = "Reset";
+            this.toolTip1.SetToolTip(this.button10, "Reset 3rd app path, to allow select new.");
             this.button10.UseVisualStyleBackColor = false;
             this.button10.Click += new System.EventHandler(this.button10_Click);
             // 
@@ -379,6 +377,7 @@
             this.checkBox_restart.Size = new System.Drawing.Size(255, 17);
             this.checkBox_restart.TabIndex = 5;
             this.checkBox_restart.Text = "Restart app (On check in ~1 min, up monitoring.)\r\n";
+            this.toolTip1.SetToolTip(this.checkBox_restart, "Can cause crash bc indian code happen. \r\n(Not tested)");
             this.checkBox_restart.UseVisualStyleBackColor = true;
             // 
             // checkBox_after
@@ -442,6 +441,7 @@
             this.textBox3.Name = "textBox3";
             this.textBox3.Size = new System.Drawing.Size(254, 20);
             this.textBox3.TabIndex = 0;
+            this.toolTip1.SetToolTip(this.textBox3, "Type username here.");
             // 
             // button3
             // 
@@ -449,13 +449,35 @@
             this.button3.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button3.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.25F, System.Drawing.FontStyle.Bold);
             this.button3.ForeColor = System.Drawing.Color.White;
-            this.button3.Location = new System.Drawing.Point(224, 172);
+            this.button3.Location = new System.Drawing.Point(215, 171);
             this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(62, 34);
+            this.button3.Size = new System.Drawing.Size(71, 34);
             this.button3.TabIndex = 6;
             this.button3.Text = "Exit";
             this.button3.UseVisualStyleBackColor = false;
             this.button3.Click += new System.EventHandler(this.button3_Click);
+            // 
+            // timer1
+            // 
+            this.timer1.Interval = 1000;
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            // 
+            // button2
+            // 
+            this.button2.BackColor = System.Drawing.Color.Transparent;
+            this.button2.BackgroundImage = global::RAL.Properties.Resources.resets;
+            this.button2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.button2.Cursor = System.Windows.Forms.Cursors.Default;
+            this.button2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.button2.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.button2.Location = new System.Drawing.Point(157, 174);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(52, 35);
+            this.button2.TabIndex = 7;
+            this.toolTip1.SetToolTip(this.button2, "Reset path!");
+            this.button2.UseVisualStyleBackColor = false;
+            this.button2.Click += new System.EventHandler(this.button2_Click_1);
             // 
             // button7
             // 
@@ -465,30 +487,36 @@
             this.button7.ForeColor = System.Drawing.SystemColors.ControlLightLight;
             this.button7.Location = new System.Drawing.Point(12, 172);
             this.button7.Name = "button7";
-            this.button7.Size = new System.Drawing.Size(88, 34);
+            this.button7.Size = new System.Drawing.Size(71, 34);
             this.button7.TabIndex = 7;
             this.button7.Text = "Launch";
             this.button7.UseVisualStyleBackColor = false;
             this.button7.Click += new System.EventHandler(this.button7_Click);
             // 
-            // button2
+            // button13
             // 
-            this.button2.BackColor = System.Drawing.Color.SandyBrown;
-            this.button2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.button2.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.button2.Location = new System.Drawing.Point(132, 172);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(60, 34);
-            this.button2.TabIndex = 7;
-            this.button2.Text = "N:Path";
-            this.button2.UseVisualStyleBackColor = false;
-            this.button2.Click += new System.EventHandler(this.button2_Click_1);
+            this.button13.BackColor = System.Drawing.Color.Transparent;
+            this.button13.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("button13.BackgroundImage")));
+            this.button13.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.button13.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button13.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.button13.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.button13.Location = new System.Drawing.Point(89, 174);
+            this.button13.Name = "button13";
+            this.button13.Size = new System.Drawing.Size(52, 35);
+            this.button13.TabIndex = 8;
+            this.toolTip1.SetToolTip(this.button13, "This will open new-user documents folder!\r\n\r\n");
+            this.button13.UseVisualStyleBackColor = false;
+            this.button13.Click += new System.EventHandler(this.button13_Click);
             // 
-            // timer1
+            // pictureBox1
             // 
-            this.timer1.Interval = 1000;
-            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            this.pictureBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.pictureBox1.Location = new System.Drawing.Point(117, 91);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(32, 32);
+            this.pictureBox1.TabIndex = 8;
+            this.pictureBox1.TabStop = false;
             // 
             // Form1
             // 
@@ -497,6 +525,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(298, 219);
+            this.Controls.Add(this.button13);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button7);
             this.Controls.Add(this.button3);
@@ -512,7 +541,6 @@
             tabPage4.PerformLayout();
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.tabControl1.ResumeLayout(false);
             this.tabPage5.ResumeLayout(false);
             this.tabPage5.PerformLayout();
@@ -520,6 +548,7 @@
             this.tabPage3.PerformLayout();
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -563,6 +592,8 @@
         private System.Windows.Forms.Button launch_sbox;
         private System.Windows.Forms.TextBox launch_box;
         private System.Windows.Forms.Button launchbox_reset;
+        private System.Windows.Forms.Button button13;
+        private System.Windows.Forms.ToolTip toolTip1;
     }
 }
 
