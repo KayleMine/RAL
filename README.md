@@ -1,7 +1,5 @@
 <p align="center">
-  <img width="289" height="217" src="https://i.imgur.com/MZ4hKKj.png">
-   <img width="289" height="217" src="https://i.imgur.com/cH9kfGw.png">
-   <img width="289" height="217" src="https://i.imgur.com/0AzpzCA.png">
+  <img width="878" height="213" src="https://i.imgur.com/5MdAciQ.png">
   
 </p>
 <p align="center">
