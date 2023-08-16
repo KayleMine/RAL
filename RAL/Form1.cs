@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using System.Diagnostics;
@@ -126,6 +126,12 @@ namespace RAL
                         {
                             log.Info("User groups - Add :: " + error.Message); MessageBox.Show(error.Message);
                         }
+                    // Set the PasswordNeverExpires property
+                    int ADS_UF_DONT_EXPIRE_PASSWD = 0x10000;
+                    int userFlags = (int)NewUser.Properties["UserFlags"].Value;
+                    NewUser.Properties["UserFlags"].Value = userFlags | ADS_UF_DONT_EXPIRE_PASSWD;
+
+                    NewUser.CommitChanges();
 
                     Settings.Default.user = NameLog;
                     Settings.Default.Save();
